@@ -20,15 +20,24 @@ function ensure_admin_access(): bool
     return false;
 }
 
-function get_database_connection(): ?PDO
+function get_database_connection()
 {
     static $pdo = null;
 
-    if ($pdo instanceof PDO) {
-        return $pdo;
-    }
+    if ($pdo === null) {
+        $dsn = 'pgsql:host=localhost;port=5432;dbname=ct275_lab2;';
+        $username = 'postgres';
+        $password = '1029384756'; // Thay bằng mật khẩu tài khoản postgres của bạn khi cài đặt
 
-    // Tạo đối tượng PDO để kết nối đến database
+        try {
+            $pdo = new PDO($dsn, $username, $password, [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            ]);
+        } catch (PDOException $e) {
+            die('Kết nối CSDL thất bại: ' . $e->getMessage());
+        }
+    }
 
     return $pdo;
 }
